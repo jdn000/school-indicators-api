@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { LearningObjectiveService } from './learning-objective.service';
 import { CreateLearningObjectiveDto } from './dto/create-learning-objective.dto';
 import { UpdateLearningObjectiveDto } from './dto/update-learning-objective.dto';
 
 @Controller('learning-objective')
 export class LearningObjectiveController {
-  constructor(private readonly learningObjectiveService: LearningObjectiveService) {}
+  constructor(private readonly learningObjectiveService: LearningObjectiveService) { }
 
   @Post()
   create(@Body() createLearningObjectiveDto: CreateLearningObjectiveDto) {
@@ -22,7 +22,7 @@ export class LearningObjectiveController {
     return this.learningObjectiveService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateLearningObjectiveDto: UpdateLearningObjectiveDto) {
     return this.learningObjectiveService.update(+id, updateLearningObjectiveDto);
   }

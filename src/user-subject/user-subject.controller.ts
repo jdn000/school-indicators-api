@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { UserSubjectService } from './user-subject.service';
 import { CreateUserSubjectDto } from './dto/create-user-subject.dto';
 import { UpdateUserSubjectDto } from './dto/update-user-subject.dto';
 
 @Controller('user-subject')
 export class UserSubjectController {
-  constructor(private readonly userSubjectService: UserSubjectService) {}
+  constructor(private readonly userSubjectService: UserSubjectService) { }
 
   @Post()
   create(@Body() createUserSubjectDto: CreateUserSubjectDto) {
@@ -22,7 +22,7 @@ export class UserSubjectController {
     return this.userSubjectService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateUserSubjectDto: UpdateUserSubjectDto) {
     return this.userSubjectService.update(+id, updateUserSubjectDto);
   }

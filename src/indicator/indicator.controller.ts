@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { IndicatorService } from './indicator.service';
 import { CreateIndicatorDto } from './dto/create-indicator.dto';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
 
 @Controller('indicator')
 export class IndicatorController {
-  constructor(private readonly indicatorService: IndicatorService) {}
+  constructor(private readonly indicatorService: IndicatorService) { }
 
   @Post()
   create(@Body() createIndicatorDto: CreateIndicatorDto) {
@@ -22,7 +22,7 @@ export class IndicatorController {
     return this.indicatorService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateIndicatorDto: UpdateIndicatorDto) {
     return this.indicatorService.update(+id, updateIndicatorDto);
   }

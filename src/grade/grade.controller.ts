@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { GradeService } from './grade.service';
 import { CreateGradeDto } from './dto/create-grade.dto';
 import { UpdateGradeDto } from './dto/update-grade.dto';
 
 @Controller('grade')
 export class GradeController {
-  constructor(private readonly gradeService: GradeService) {}
+  constructor(private readonly gradeService: GradeService) { }
 
   @Post()
   create(@Body() createGradeDto: CreateGradeDto) {
@@ -22,7 +22,7 @@ export class GradeController {
     return this.gradeService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateGradeDto: UpdateGradeDto) {
     return this.gradeService.update(+id, updateGradeDto);
   }
