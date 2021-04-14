@@ -10,7 +10,6 @@ import { SubjectRepository } from './subject.repo';
 import { UserRepository } from './user.repo';
 import { UserSubjectRepository } from './userSubject.repo';
 
-
 // Database Interface Extensions:
 interface IExtensions {
   user: UserRepository;
