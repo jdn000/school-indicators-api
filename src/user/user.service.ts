@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { db } from '../db';
+import { User } from 'src/interfaces/User';
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  public async getAll(): Promise<User[]> {
+    try {
+      return await db.user.getAll();
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 
-  async findAll() {
-    return await db.user.getAll();
+  public async getById(data: number): Promise<User> {
+    try {
+      //  const decoded = jwt.verify(token, "your secret or key");
+      //  middlewares.isAuth;
+      // var userId = decoded.user_data.user_id;
+      return await db.user.findById(data);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+
+  public async create(data: User): Promise<User> {
+    try {
+      return await db.user.add(data);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  public async update(data: User): Promise<User> {
+    try {
+      return await db.user.update(data);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 }

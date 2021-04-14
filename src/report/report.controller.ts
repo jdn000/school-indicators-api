@@ -1,34 +1,50 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param } from '@nestjs/common';
+import { Response } from 'express';
 import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
+import { promisify } from 'util';
+import { AlumnService } from 'src/alumn/alumn.service';
+
+import { SemesterService } from 'src/semester/semester.service';
+
 
 @Controller('report')
 export class ReportController {
-  constructor(private readonly reportService: ReportService) { }
+  constructor(
+    private readonly reportService: ReportService,
+    private readonly alumnService: AlumnService,
+    private readonly semesterService: SemesterService
+  ) { }
 
-  @Post()
-  create(@Body() createReportDto: CreateReportDto) {
-    return this.reportService.create(createReportDto);
+  @Post('/:gradeNumber')
+  async getAll(@Param('gradeNumber') gradeNumber: number): Promise<any> {
+    const alumnsData = await this.alumnService.getAllData(gradeNumber);
+    const sem = await this.semesterService.getCurrentSemester();
+    let isFirstSemester = false;
+    if (sem.code % 2 === 0) {
+      isFirstSemester = true;
+      return this.reportService.test(alumnsData, isFirstSemester);
+    }
   }
 
-  @Get()
-  findAll() {
-    return this.reportService.findAll();
+  @Get('/:id/download')
+  // @UseBefore(celebrate(report.get))
+  async downloadLabReport(@Param('id') id: number, response: Response): Promise<Response> {
+    const { path } = await this.reportService.getById(id);
+    await promisify<string, void>(response.download.bind(response))(path);
+    this.reportService.deleteReportAfterDownload(path);
+    return response;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reportService.findOne(+id);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
-    return this.reportService.update(+id, updateReportDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reportService.remove(+id);
+  @Get('/alumn/:id')
+  async getByAlumnId(@Param('id') id: number): Promise<any> {
+    const alumnsData = await this.alumnService.getAlumnData(id);
+    const sem = await this.semesterService.getCurrentSemester();
+    let isFirstSemester = false;
+    if (sem.code % 2 === 0) {
+      isFirstSemester = true;
+    }
+    return this.reportService.test([alumnsData], isFirstSemester);
   }
 }

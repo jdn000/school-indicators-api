@@ -1,26 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { db } from 'src/db';
+import { Semester } from 'src/interfaces/Semester';
 import { CreateSemesterDto } from './dto/create-semester.dto';
 import { UpdateSemesterDto } from './dto/update-semester.dto';
 
 @Injectable()
 export class SemesterService {
-  create(createSemesterDto: CreateSemesterDto) {
-    return 'This action adds a new semester';
+  public async getAll(): Promise<Semester[]> {
+    try {
+      return await db.semester.getAll();
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all semester`;
+  public async getCurrentSemester(): Promise<Semester> {
+    try {
+      return await db.semester.getCurrentSemester();
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} semester`;
+  public async update(data: Semester): Promise<Semester> {
+    try {
+      return await db.semester.update(data);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
-
-  update(id: number, updateSemesterDto: UpdateSemesterDto) {
-    return `This action updates a #${id} semester`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} semester`;
+  public async sync(gradeId: number): Promise<any> {
+    try {
+      return await db.semester.sync(gradeId);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 }

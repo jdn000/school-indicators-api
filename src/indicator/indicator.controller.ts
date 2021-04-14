@@ -2,33 +2,36 @@ import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common'
 import { IndicatorService } from './indicator.service';
 import { CreateIndicatorDto } from './dto/create-indicator.dto';
 import { UpdateIndicatorDto } from './dto/update-indicator.dto';
+import { Indicator } from 'src/interfaces/Indicator';
 
 @Controller('indicator')
 export class IndicatorController {
+
   constructor(private readonly indicatorService: IndicatorService) { }
 
-  @Post()
-  create(@Body() createIndicatorDto: CreateIndicatorDto) {
-    return this.indicatorService.create(createIndicatorDto);
+  @Get('/')
+  async getAll(): Promise<Indicator[]> {
+    return this.indicatorService.getAll();
+
   }
 
-  @Get()
-  findAll() {
-    return this.indicatorService.findAll();
+  @Get('/:id')
+  async getById(@Param('id') id: number): Promise<Indicator> {
+    return this.indicatorService.getById(id);
+  }
+  @Get('/objective/:objectiveId')
+  async getByRun(@Param('objectiveId') objectiveId: number): Promise<Indicator[]> {
+    return this.indicatorService.getByObjectiveId(objectiveId);
+  }
+  @Post('/')
+  async post(@Body() data: Indicator): Promise<Indicator> {
+    return this.indicatorService.create(data);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.indicatorService.findOne(+id);
-  }
+  @Put('/:id')
+  async put(@Param('id') id: number, @Body() params: Indicator): Promise<Indicator> {
+    params.id = id;
+    return this.indicatorService.update(params);
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateIndicatorDto: UpdateIndicatorDto) {
-    return this.indicatorService.update(+id, updateIndicatorDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.indicatorService.remove(+id);
   }
 }

@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { db } from 'src/db';
+import { UserSubject } from 'src/interfaces/User';
 import { CreateUserSubjectDto } from './dto/create-user-subject.dto';
 import { UpdateUserSubjectDto } from './dto/update-user-subject.dto';
 
 @Injectable()
 export class UserSubjectService {
-  create(createUserSubjectDto: CreateUserSubjectDto) {
-    return 'This action adds a new userSubject';
+  public async getAll(): Promise<UserSubject[]> {
+    try {
+      return await db.userSubject.getAll();
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all userSubject`;
+  public async getByUserId(data: number): Promise<UserSubject[]> {
+    try {
+      return await db.userSubject.findByUserId(data);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userSubject`;
+  public async create(data: UserSubject): Promise<UserSubject> {
+    try {
+      return await db.userSubject.add(data);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 
-  update(id: number, updateUserSubjectDto: UpdateUserSubjectDto) {
-    return `This action updates a #${id} userSubject`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} userSubject`;
+  public async delete(id: number): Promise<boolean> {
+    try {
+      return await db.userSubject.delete(id);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 }

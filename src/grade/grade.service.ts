@@ -1,26 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { db } from 'src/db';
+import { Grade } from 'src/interfaces/Grade';
 import { CreateGradeDto } from './dto/create-grade.dto';
 import { UpdateGradeDto } from './dto/update-grade.dto';
 
 @Injectable()
 export class GradeService {
-  create(createGradeDto: CreateGradeDto) {
-    return 'This action adds a new grade';
+  public async getAll(): Promise<Grade[]> {
+    try {
+      return await db.grade.getAll();
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all grade`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} grade`;
-  }
-
-  update(id: number, updateGradeDto: UpdateGradeDto) {
-    return `This action updates a #${id} grade`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} grade`;
+  public async update(data: Grade): Promise<Grade> {
+    try {
+      return await db.grade.update(data);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 }

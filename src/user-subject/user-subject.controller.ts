@@ -2,33 +2,35 @@ import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common'
 import { UserSubjectService } from './user-subject.service';
 import { CreateUserSubjectDto } from './dto/create-user-subject.dto';
 import { UpdateUserSubjectDto } from './dto/update-user-subject.dto';
+import { UserSubject } from 'src/interfaces/User';
 
 @Controller('user-subject')
 export class UserSubjectController {
   constructor(private readonly userSubjectService: UserSubjectService) { }
 
-  @Post()
-  create(@Body() createUserSubjectDto: CreateUserSubjectDto) {
-    return this.userSubjectService.create(createUserSubjectDto);
+  @Get('/')
+  async getAll(): Promise<UserSubject[]> {
+    return this.userSubjectService.getAll();
+
   }
 
-  @Get()
-  findAll() {
-    return this.userSubjectService.findAll();
+  @Get('/:id')
+  //@UseBefore(celebrate(validators.userSubject.get))
+  async getById(@Param('id') id: number): Promise<UserSubject[]> {
+    return this.userSubjectService.getByUserId(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userSubjectService.findOne(+id);
+  @Post('/')
+  //@UseBefore(celebrate(validators.userSubject.post))
+  async post(@Body() data: UserSubject): Promise<UserSubject> {
+    return this.userSubjectService.create(data);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserSubjectDto: UpdateUserSubjectDto) {
-    return this.userSubjectService.update(+id, updateUserSubjectDto);
-  }
+  @Delete('/:id')
+  // @UseBefore(celebrate(validators.userSubject.put))
+  async put(@Param('id') id: number): Promise<boolean> {
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userSubjectService.remove(+id);
+    return this.userSubjectService.delete(id);
+
   }
 }

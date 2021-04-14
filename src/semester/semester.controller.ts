@@ -2,33 +2,30 @@ import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common'
 import { SemesterService } from './semester.service';
 import { CreateSemesterDto } from './dto/create-semester.dto';
 import { UpdateSemesterDto } from './dto/update-semester.dto';
+import { Semester } from 'src/interfaces/Semester';
 
 @Controller('semester')
 export class SemesterController {
   constructor(private readonly semesterService: SemesterService) { }
 
-  @Post()
-  create(@Body() createSemesterDto: CreateSemesterDto) {
-    return this.semesterService.create(createSemesterDto);
+  @Get('/')
+  async getAll(): Promise<Semester[]> {
+    return this.semesterService.getAll();
   }
 
-  @Get()
-  findAll() {
-    return this.semesterService.findAll();
+  @Get('/current')
+  async getCurrentSemester(): Promise<Semester> {
+    return this.semesterService.getCurrentSemester();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.semesterService.findOne(+id);
+  @Put('/:id')
+  async update(@Param('id') id: number, @Body() params: Semester): Promise<Semester> {
+    params.id = id;
+    return this.semesterService.update(params);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateSemesterDto: UpdateSemesterDto) {
-    return this.semesterService.update(+id, updateSemesterDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.semesterService.remove(+id);
+  @Post('/sync/:gradeId')
+  async sync(@Param('gradeId') gradeId: number): Promise<any> {
+    return this.semesterService.sync(gradeId);
   }
 }
